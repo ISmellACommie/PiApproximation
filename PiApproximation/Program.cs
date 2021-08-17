@@ -18,11 +18,11 @@ namespace PiApproximation
             int[] localCounters = new int[numberOfCores];
             Task[] tasks = new Task[numberOfCores];
 
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
             Console.WriteLine($"Number of cores on system: {numberOfCores}");
             Console.WriteLine($"Iteration limit: {iterations}");
+
+            Stopwatch sw = new();
+            sw.Start();
 
             for (int i = 0; i < numberOfCores; i++)
             {
@@ -30,14 +30,14 @@ namespace PiApproximation
                 tasks[procIndex] = Task.Factory.StartNew(() =>
                 {
                     int counter = 0;
-                    Random rnd = new Random();
+                    Random rnd = new();
 
                     for (int j = 0; j < iterations / numberOfCores; j++)
                     {
                         x = rnd.NextDouble();
                         y = rnd.NextDouble();
 
-                        if (Math.Sqrt(x * x + y * y) <= 1.0)
+                        if ((x * x + y * y) < 1.0) // No need to sqrt since radius is 1 so calculation is same without sqrt.
                             counter++;
                     }
                     localCounters[procIndex] = counter;
@@ -47,9 +47,9 @@ namespace PiApproximation
             Task.WaitAll(tasks);
             inCircle = localCounters.Sum();
 
-            piApprox = 4 * ((double)inCircle / (double)iterations);
+            piApprox = 4.0 * ((double)inCircle / iterations);
 
-            Console.WriteLine($"Approximated pi = {piApprox.ToString("F8")}");
+            Console.WriteLine($"Approximated pi = {piApprox:F8}");
 
             sw.Stop();
             Console.WriteLine($"Time taken (ms): {sw.ElapsedMilliseconds}");
