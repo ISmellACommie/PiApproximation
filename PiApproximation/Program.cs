@@ -37,7 +37,7 @@ namespace PiApproximation
                         x = rnd.NextDouble();
                         y = rnd.NextDouble();
 
-                        if ((x * x + y * y) < 1.0) // No need to sqrt since radius is 1 so calculation is same without sqrt.
+                        if (Math.Sqrt(x * x + y * y) < 1.0)
                             counter++;
                     }
                     localCounters[procIndex] = counter;
